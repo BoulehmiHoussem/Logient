@@ -24,7 +24,7 @@ class LinksTest extends TestCase
             Link::factory()->make()->toArray()
         );
         $response = $this->get(route('link.shortcut', ['shortcut' => $link->shortcut]));
-        $response->assertStatus(200);
+        $response->assertRedirect($link->link);
     }
 
 
@@ -119,5 +119,59 @@ class LinksTest extends TestCase
         $response = $this->actingAs($user)->post(route('link.store'), $sixth_link->toArray());
 
         $response->assertSessionHasErrors('link');
+    }
+
+    /**
+     * test if authenticated user can delete one of his links.
+     *
+     * @return void
+     */
+    public function test_authenticated_users_can_delete_one_of_his_links()
+    {
+        $user = User::factory()->create();
+
+        $link = $user->links()->create(Link::factory()->make()->toArray());
+
+        $this->assertDatabaseHas('links', [
+            'id' => $link->id
+        ]);
+        
+        $response = $this->actingAs($user)->delete(route('link.destroy', ['link' => $link->id]));
+
+        $this->assertDatabaseMissing('links', [
+            'id' => $link->id
+        ]);
+    }
+
+    /**
+     * test if authenticated user cant delete other users links.
+     *
+     * @return void
+     */
+    public function test_authenticated_users_cant_delete_other_users_links()
+    {
+        $user_1 = User::factory()->create();
+        $user_2 = User::factory()->create();
+
+        $link_user_1 = $user_1->links()->create(Link::factory()->make()->toArray());
+        $link_user_2 = $user_2->links()->create(Link::factory()->make()->toArray());
+
+        $this->assertDatabaseHas('links', [
+            'id' => $link_user_1->id,
+            'user_id' => $user_1->id,
+        ]);
+
+        $this->assertDatabaseHas('links', [
+            'id' => $link_user_2->id,
+            'user_id' => $user_2->id,
+        ]);
+        
+        $response = $this->actingAs($user_1)->delete(route('link.destroy', ['link' => $link_user_2->id]));
+
+        $this->assertDatabaseHas('links', [
+            'id' => $link_user_2->id
+        ]); 
+
+        $response->assertStatus(404);
     }
 }
