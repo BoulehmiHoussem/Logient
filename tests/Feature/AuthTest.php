@@ -29,7 +29,7 @@ class AuthTest extends TestCase
 
         $response = $this->post(route('register'), $userData);
 
-        $response->assertRedirect(route('home'));
+        $response->assertRedirect(route('link.index'));
 
         $this->assertDatabaseHas('users', [
             'email' => $userData['email']
@@ -76,7 +76,7 @@ class AuthTest extends TestCase
 
         $response = $this->post(route('login'), $userData);
 
-        $response->assertRedirect(route('home'));
+        $response->assertRedirect(route('link.index'));
 
         $this->assertAuthenticatedAs($user);
     }

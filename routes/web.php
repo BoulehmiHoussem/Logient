@@ -14,18 +14,29 @@ use App\Http\Controllers\LinksController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+
+Route::prefix('/dashboard')->group(function(){
+    Route::get('/', function () {
+        return view('welcome');
+    });
+    
+    //Authentification routes
+    Auth::routes();
+    
+    //Shortcut route
+    
+    //Links Management 
+    Route::middleware('auth')->group(function () { 
+    
+        // Links EndPoints
+        Route::resource('/link' , LinksController::class)->only([
+            'index', 'store', 'destroy', 'create'
+        ]);
+    
+    });
 });
 
-Auth::routes();
+
+
 Route::get('/{shortcut}', [LinksController::class, 'show'])->middleware('log')->name('link.shortcut');
-Route::middleware('auth')->group(function () { 
 
-    // Links EndPoints
-    Route::resource('/link' , LinksController::class)->only([
-        'index', 'store', 'destroy', 'create'
-    ]);
-
-});
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

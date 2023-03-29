@@ -19,7 +19,9 @@
                         <button type="submit" class="btn btn-primary">
                             {{ __('Submit') }}
                         </button>
-                        
+                        <a href="{{ route('link.index') }}" class="btn btn-warning">
+                            {{ __('Cancel') }}
+                        </a>
                     </div>
 
                 </div>

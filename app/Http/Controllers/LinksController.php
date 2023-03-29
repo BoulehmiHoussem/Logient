@@ -11,6 +11,19 @@ use Illuminate\Support\Str;
 class LinksController extends Controller
 {
 
+   /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function index()
+    {
+        return view('links.index', [
+            'links' => Auth::user()->links()->orderBy('created_at', 'DESC')->get()
+        ]);
+    }
+
+
     /**
      * Show the form for creating a new resource.
      *
@@ -18,7 +31,7 @@ class LinksController extends Controller
      */
     public function create()
     {
-        //
+        return view('links.create');
     }
 
     /**
@@ -31,7 +44,9 @@ class LinksController extends Controller
     {
         $linkData = $request->all();
         $linkData['shortcut'] = Str::random(6);
+
         Auth::user()->links()->create($linkData);
+        return redirect()->route('link.index');
     }
 
     /**
@@ -56,5 +71,7 @@ class LinksController extends Controller
     public function destroy($link)
     {
         Auth::user()->links()->whereId($link)->firstOrFail()->delete();
+        return redirect()->route('link.index');
+
     }
 }

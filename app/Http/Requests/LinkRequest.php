@@ -31,6 +31,7 @@ class LinkRequest extends FormRequest
             'link' => 
             [
                 'required',
+                'url',
                 function ($attribute, $value, $fail) use ($user) {
                     if ($user->links()->count() >= 5) {
                         $fail("You can't create more than 5 links.");

@@ -17,7 +17,7 @@ class LogAccess
      */
     public function handle(Request $request, Closure $next , )
     {
-
+       
     
     (new AccessLogger())->logAccess($request);
     return $next($request);

@@ -21,11 +21,18 @@ class LinksTest extends TestCase
      */
     public function test_guests_can_access_shortcut_link()
     {
+        //create user
         $user = User::factory()->create();
+        
+        //create a link
         $link = $user->links()->create(
             Link::factory()->make()->toArray()
         );
+
+        //user accesses link.shortcut with an undentified shortcut
         $response = $this->get(route('link.shortcut', ['shortcut' => $link->shortcut]));
+
+        //app will redirect him to the original link
         $response->assertRedirect($link->link);
     }
 
@@ -37,8 +44,13 @@ class LinksTest extends TestCase
      */
     public function test_guests_access_a_not_found_shortcut_link_returns_404()
     {
+        //prepare link data
         $link = Link::factory()->make();
+
+        //unauthenticated user accesses link.shortcut
         $response = $this->get(route('link.shortcut', ['shortcut' => $link->shortcut]));
+
+        //app will return 404 not found
         $response->assertStatus(404);
     }
 
@@ -49,9 +61,14 @@ class LinksTest extends TestCase
      */
     public function test_guests_cant_access_links_create_page()
     {
-        $response = $this->get(route('link.create'));
 
-        $response->assertStatus(302);
+        //unauthenticated user accesses link.create
+        $response = $this->get(route('link.create'));
+        
+        //app will redirect him to login
+        $response->assertStatus(302)
+                ->assertRedirect('dashboard/login');
+        
     }
 
     
@@ -62,26 +79,14 @@ class LinksTest extends TestCase
      */
     public function test_authenticated_user_can_access_links_create_page()
     {
+        //create user
         $user = User::factory()->create();
 
+        //authenticated user accesses link.create
         $response = $this->actingAs($user)->get(route('link.create'));
 
+        //app will return create page
         $response->assertStatus(200);
-    }
-
-
-
-    /**
-     * test if unauthenticated user cannot access create page.
-     *
-     * @return void
-     */
-    public function test_unauthenticated_user_canot_access_links_create_page()
-    {
-
-        $response = $this->get(route('link.create'));
-
-        $response->assertStatus(302);
     }
 
 
@@ -92,11 +97,16 @@ class LinksTest extends TestCase
      */
     public function test_authenticated_user_can_add_a_link()
     {
+        //create user
         $user = User::factory()->create();
+
+        //prepare link data
         $link = Link::factory()->make();
         
+        //authenticated user submits data to link.store
         $response = $this->actingAs($user)->post(route('link.store'), $link->toArray());
 
+        //database has the posted link
         $this->assertDatabaseHas('links', [
             'link' => $link->link,
             'user_id' => $user->id
@@ -110,17 +120,23 @@ class LinksTest extends TestCase
      */
     public function test_authenticated_user_cant_add_more_than_5_links()
     {
+        //create user
         $user = User::factory()->create();
+
+        //create 5 links for this user
         for($i = 0 ; $i<=5 ; $i++)
         {
             $user->links()->create(Link::factory()->make()->toArray());
         }
 
+        //prepare new link
         $sixth_link = Link::factory()->make();
         
+        //authenticated user submits data to link.store
         $response = $this->actingAs($user)->post(route('link.store'), $sixth_link->toArray());
 
-        $response->assertSessionHasErrors('link');
+        //app will return error message You can't create more than 5 links
+        $response->assertSessionHasErrors( ['link' => "You can't create more than 5 links."] );
     }
 
     /**
@@ -209,7 +225,7 @@ class LinksTest extends TestCase
         $this->assertStringContainsString("Lien accédé: {$url}", $lastLogLine);
     }
 
-    public function test_expired_links_are_deleted()
+    public function test_app_custom_command_will_delete_expired_links()
     {
         // Create a link that is exactly 24 hours old
 
