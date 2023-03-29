@@ -216,9 +216,12 @@ class LinksTest extends TestCase
 
         $user = User::factory()->create();
 
-        $linkData = Link::factory()->make()->toArray();
-        $linkData['created_at'] = Carbon::now()->subHours(24);
-        $OldLink = $user->links()->create($linkData);
+        $OldLink = Link::factory()->make();
+        $OldLink->created_at = Carbon::now()->subHours(24);
+        $OldLink->user_id = $user->id;
+        
+        $OldLink->save();
+        
 
         //Assert link created 
         $this->assertDatabaseHas('links', [
@@ -233,7 +236,7 @@ class LinksTest extends TestCase
         Artisan::call('links:delete-expired');
 
         // Assert that the old link was deleted
-        $this->assertDatabaseMissing('links', ['id' => $oldLink->id]);
+        $this->assertDatabaseMissing('links', ['id' => $OldLink->id]);
 
         // Assert that the recent link still exists
         $this->assertDatabaseHas('links', ['id' => $recentLink->id]);
