@@ -99,7 +99,6 @@ class LinksTest extends TestCase
 
         $this->assertDatabaseHas('links', [
             'link' => $link->link,
-            'shortcut' => $link->shortcut,
             'user_id' => $user->id
         ]);
     }

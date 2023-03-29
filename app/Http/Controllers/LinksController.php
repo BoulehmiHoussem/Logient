@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Link;
 use App\Http\Requests\LinkRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class LinksController extends Controller
 {
@@ -28,7 +29,9 @@ class LinksController extends Controller
      */
     public function store(LinkRequest $request)
     {
-        Auth::user()->links()->create($request->all());
+        $linkData = $request->all();
+        $linkData['shortcut'] = Str::random(6);
+        Auth::user()->links()->create($linkData);
     }
 
     /**
