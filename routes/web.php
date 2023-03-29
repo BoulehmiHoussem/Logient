@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LinksController;
+use App\Http\Controllers\LangController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,16 +15,19 @@ use App\Http\Controllers\LinksController;
 |
 */
 
+Route::get('/', function () {
+    return redirect()->route('link.index');
+});
+
 
 Route::prefix('/dashboard')->group(function(){
-    Route::get('/', function () {
-        return view('welcome');
-    });
     
     //Authentification routes
     Auth::routes();
+
+    //change language
+    Route::get('/lang/change', [LangController::class, 'change'])->name('lang.change');
     
-    //Shortcut route
     
     //Links Management 
     Route::middleware('auth')->group(function () { 
@@ -37,6 +41,6 @@ Route::prefix('/dashboard')->group(function(){
 });
 
 
-
+//Shortcut route
 Route::get('/{shortcut}', [LinksController::class, 'show'])->middleware('log')->name('link.shortcut');
 

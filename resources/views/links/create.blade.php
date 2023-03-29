@@ -8,19 +8,19 @@
                 @csrf
                 <div class="card">
                     <div class="card-body">
-                        <input type="text" value="{{ old('link') }}" name="link" class="form-control @error('link') is-invalid @enderror" placeholder="{{ __('Link to shortcut ...') }}" >
+                        <input type="text" value="{{ old('link') }}" name="link" class="form-control @error('link') is-invalid @enderror" placeholder="{{ __('trans.Put link here ...') }}" >
                         @error('link')
                             <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
+                                    <strong>{{ __('validation') }}</strong>
                             </span>
                         @enderror            
                     </div>
                     <div class="card-footer text-center">
                         <button type="submit" class="btn btn-primary">
-                            {{ __('Submit') }}
+                            {{ __('trans.Submit') }}
                         </button>
                         <a href="{{ route('link.index') }}" class="btn btn-warning">
-                            {{ __('Cancel') }}
+                            {{ __('trans.Cancel') }}
                         </a>
                     </div>
 
