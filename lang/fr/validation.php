@@ -63,6 +63,7 @@ return array(
     ),
     "unique"           => "La valeur du champ :attribute est déjà utilisée.",
     "url"              => "Le format de l'URL de :attribute n'est pas valide.",
+    "link_limit"       => "Vous ne pouvez pas créer plus de 5 liens.", 
 
     /*
     |--------------------------------------------------------------------------

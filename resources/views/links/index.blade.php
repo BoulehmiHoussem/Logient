@@ -4,6 +4,24 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8 mb-3">
+            @if(Session::has('created'))
+            <div class="alert alert-success d-flex align-items-center" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+                <div>
+                    {{ Session::get('created') }}
+                </div>
+            </div>
+            @endif
+
+            @if(Session::has('deleted'))
+            <div class="alert alert-warning d-flex align-items-center" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+                <div>
+                    {{ Session::get('deleted') }}
+                </div>
+            </div>
+            @endif
+
             <div class="card">
                 <div class="card-header">{{ __('trans.My Shortcuts') }} <a class="btn btn-primary btn-sm float-end" href="{{ route('link.create') }}">{{ __('trans.Add Shortcut') }}</a></div>
                 <div class="card-body">

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 use App;
-
 use Illuminate\Http\Request;
 
 class LangController extends Controller

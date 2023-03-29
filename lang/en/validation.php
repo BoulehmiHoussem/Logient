@@ -150,6 +150,8 @@ return [
     'url' => 'The :attribute must be a valid URL.',
     'ulid' => 'The :attribute must be a valid ULID.',
     'uuid' => 'The :attribute must be a valid UUID.',
+    "link_limit"       => "You can't create more than 5 links.",
+
 
     /*
     |--------------------------------------------------------------------------

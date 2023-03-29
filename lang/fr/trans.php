@@ -16,5 +16,8 @@ return [
     'Cancel' => 'Annuler',
     'Delete' => 'Supprimer',
     'Put link here ...' => 'Placer le lien ici ...',
-    'Shortcut For' => 'Raccourci pour'
+    'Shortcut For' => 'Raccourci pour',
+    'link_created' => 'Raccourci créé avec succés',
+    'link_deleted' => 'Raccourci supprimé avec succés'
+
 ];

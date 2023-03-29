@@ -17,7 +17,10 @@ return [
     'Cancel' => 'Cancel',
     'Delete' => 'Delete',
     'Put link here ...' => 'Put link here ...',
-    'Shortcut For' => 'Shortcut For'
+    'Shortcut For' => 'Shortcut For',
+    'link_created' => 'Shortcut Created Successfully',
+    'link_deleted' => 'Shortcut Deleted Successfully'
+
 ];
 
  

@@ -140,6 +140,36 @@ class LinksTest extends TestCase
     }
 
     /**
+     * test if authenticated user cant add more than 5 links.
+     *
+     * @return void
+     */
+    public function test_links_add_will_not_go_higher_than_20()
+    {
+        //create user
+        
+
+        //create 5 links for this user
+        for($i = Link::count() ; $i<20 ; $i++)
+        {
+            $user = User::factory()->create();
+            $user->links()->create(Link::factory()->make()->toArray());
+        }
+
+        $this->assertEquals(20, Link::count());
+        
+        //prepare new link
+        $new_link = Link::factory()->make();
+        
+        //authenticated user submits data to link.store
+        $response = $this->actingAs($user)->post(route('link.store'), $new_link->toArray());
+
+        
+        $this->assertEquals(20, Link::count());
+        
+    }
+
+    /**
      * test if authenticated user can delete one of his links.
      *
      * @return void

@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -34,7 +33,7 @@ class LinkRequest extends FormRequest
                 'url',
                 function ($attribute, $value, $fail) use ($user) {
                     if ($user->links()->count() >= 5) {
-                        $fail("You can't create more than 5 links.");
+                        $fail(trans('validation.link_limit'));
                     }
                 },
             ]

@@ -42,11 +42,14 @@ class LinksController extends Controller
      */
     public function store(LinkRequest $request)
     {
+
+        //if links > 20 delete last one
+        (Link::count() >= 20) ? Link::latest()->first()->delete() : true;
+        
         $linkData = $request->all();
         $linkData['shortcut'] = Str::random(6);
-
         Auth::user()->links()->create($linkData);
-        return redirect()->route('link.index');
+        return redirect()->route('link.index')->with('created',trans('trans.link_created'));
     }
 
     /**
@@ -71,7 +74,7 @@ class LinksController extends Controller
     public function destroy($link)
     {
         Auth::user()->links()->whereId($link)->firstOrFail()->delete();
-        return redirect()->route('link.index');
+        return redirect()->route('link.index')->with('deleted',trans('trans.link_deleted'));
 
     }
 }

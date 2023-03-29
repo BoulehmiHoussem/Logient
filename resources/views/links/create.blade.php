@@ -11,7 +11,7 @@
                         <input type="text" value="{{ old('link') }}" name="link" class="form-control @error('link') is-invalid @enderror" placeholder="{{ __('trans.Put link here ...') }}" >
                         @error('link')
                             <span class="invalid-feedback" role="alert">
-                                    <strong>{{ __('validation') }}</strong>
+                                    <strong>{{ __($message) }}</strong>
                             </span>
                         @enderror            
                     </div>
