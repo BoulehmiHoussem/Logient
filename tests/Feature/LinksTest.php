@@ -7,6 +7,8 @@ use App\Models\Link;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Artisan;
+use Carbon\Carbon;
 
 class LinksTest extends TestCase
 {
@@ -206,5 +208,34 @@ class LinksTest extends TestCase
         $url = url($link->shortcut);
         
         $this->assertStringContainsString("Lien accédé: {$url}", $lastLogLine);
+    }
+
+    public function test_expired_links_are_deleted()
+    {
+        // Create a link that is exactly 24 hours old
+
+        $user = User::factory()->create();
+
+        $linkData = Link::factory()->make()->toArray();
+        $linkData['created_at'] = Carbon::now()->subHours(24);
+        $OldLink = $user->links()->create($linkData);
+
+        //Assert link created 
+        $this->assertDatabaseHas('links', [
+            'id' => $OldLink->id
+        ]);
+
+        // Create a link that is less than 24 hours old
+        $recentLink = $user->links()->create(Link::factory()->make()->toArray());
+        
+
+        // Run the command that deletes expired links
+        Artisan::call('links:delete-expired');
+
+        // Assert that the old link was deleted
+        $this->assertDatabaseMissing('links', ['id' => $oldLink->id]);
+
+        // Assert that the recent link still exists
+        $this->assertDatabaseHas('links', ['id' => $recentLink->id]);
     }
 }
