@@ -41,21 +41,6 @@ class LinksTest extends TestCase
     }
 
     /**
-     * test if authenticated user can access create page.
-     *
-     * @return void
-     */
-    public function test_authenticated_users_can_access_links_create_page()
-    {
-        $user = User::factory()->create();
-
-        $response = $this->actingAs($user)->get(route('link.create'));
-
-        $response->assertStatus(200);
-    }
-
-
-    /**
      * test if guests can't access create page.
      *
      * @return void
@@ -67,13 +52,29 @@ class LinksTest extends TestCase
         $response->assertStatus(302);
     }
 
+    
+    /**
+     * test if authenticated user can access create page.
+     *
+     * @return void
+     */
+    public function test_authenticated_user_can_access_links_create_page()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('link.create'));
+
+        $response->assertStatus(200);
+    }
+
+
 
     /**
      * test if unauthenticated user cannot access create page.
      *
      * @return void
      */
-    public function test_unauthenticated_users_canot_access_links_create_page()
+    public function test_unauthenticated_user_canot_access_links_create_page()
     {
 
         $response = $this->get(route('link.create'));
@@ -87,7 +88,7 @@ class LinksTest extends TestCase
      *
      * @return void
      */
-    public function test_authenticated_users_can_add_a_link()
+    public function test_authenticated_user_can_add_a_link()
     {
         $user = User::factory()->create();
         $link = Link::factory()->make();
@@ -106,7 +107,7 @@ class LinksTest extends TestCase
      *
      * @return void
      */
-    public function test_authenticated_users_cant_add_more_than_5_links()
+    public function test_authenticated_user_cant_add_more_than_5_links()
     {
         $user = User::factory()->create();
         for($i = 0 ; $i<=5 ; $i++)
@@ -126,7 +127,7 @@ class LinksTest extends TestCase
      *
      * @return void
      */
-    public function test_authenticated_users_can_delete_one_of_his_links()
+    public function test_authenticated_user_can_delete_one_of_his_links()
     {
         $user = User::factory()->create();
 
@@ -148,7 +149,7 @@ class LinksTest extends TestCase
      *
      * @return void
      */
-    public function test_authenticated_users_cant_delete_other_users_links()
+    public function test_authenticated_user_cant_delete_other_users_links()
     {
         $user_1 = User::factory()->create();
         $user_2 = User::factory()->create();
@@ -173,5 +174,37 @@ class LinksTest extends TestCase
         ]); 
 
         $response->assertStatus(404);
+    }
+
+
+    /**
+     * test if all users can access shortcuts links.
+     *
+     * @return void
+     */
+    public function test_app_will_log_access_informations()
+    {
+        $user = User::factory()->create();
+    
+        $link = $user->links()->create(
+            Link::factory()->make()->toArray()
+        );
+        $response = $this->actingAs($user)->get(route('link.shortcut', ['shortcut' => $link->shortcut]));
+        
+        $logPath = storage_path('logs/access.log');
+
+        $this->assertFileExists($logPath);
+        
+        $logLines = file($logPath);
+        
+        $lastLogLine = end($logLines);
+    
+        
+        
+        $logContent = file_get_contents($logPath);
+
+        $url = url($link->shortcut);
+        
+        $this->assertStringContainsString("Lien accédé: {$url}", $lastLogLine);
     }
 }

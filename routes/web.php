@@ -19,7 +19,7 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-Route::get('/{shortcut}', [LinksController::class, 'show'])->name('link.shortcut');
+Route::get('/{shortcut}', [LinksController::class, 'show'])->middleware('log')->name('link.shortcut');
 Route::middleware('auth')->group(function () { 
 
     // Links EndPoints
