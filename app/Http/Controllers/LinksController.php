@@ -42,7 +42,7 @@ class LinksController extends Controller
      */
     public function store(LinkRequest $request)
     {
-
+        
         //if links > 20 delete last one
         (Link::count() >= 20) ? Link::latest()->first()->delete() : true;
         

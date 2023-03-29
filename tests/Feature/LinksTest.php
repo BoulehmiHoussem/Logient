@@ -14,6 +14,8 @@ class LinksTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
+    
+
     /**
      * test if all users can access shortcuts links.
      *
