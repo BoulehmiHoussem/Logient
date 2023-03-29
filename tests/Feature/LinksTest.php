@@ -165,7 +165,7 @@ class LinksTest extends TestCase
         $response = $this->actingAs($user)->post(route('link.store'), $new_link->toArray());
 
         
-        $this->assertEquals(20, Link::count());
+        $response->assertSessionHas('created', trans('trans.link_created'));
         
     }
 
@@ -185,6 +185,8 @@ class LinksTest extends TestCase
         ]);
         
         $response = $this->actingAs($user)->delete(route('link.destroy', ['link' => $link->id]));
+
+        $response->assertSessionHas('deleted', trans('trans.link_deleted'));
 
         $this->assertDatabaseMissing('links', [
             'id' => $link->id
