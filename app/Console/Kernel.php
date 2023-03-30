@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        //this should delete old records (older than 24 hours) every 24hours
         $schedule->command(DeleteExpiredLinks::class)->daily();
     }
 

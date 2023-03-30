@@ -44,7 +44,7 @@ class LinksController extends Controller
     {
         
         //if links > 20 delete last one
-        (Link::count() >= 20) ? Link::latest()->first()->delete() : true;
+        (Link::count() >= 20) ? Link::oldest()->first()->delete() : true;
         
         $linkData = $request->all();
         $linkData['shortcut'] = Str::random(6);
